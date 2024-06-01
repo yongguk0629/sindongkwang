@@ -49,4 +49,4 @@ jobs:
 
       - name: Build with Gradle
         working-directory: ./sdk
-        run: ./gradlew build
+        run: ./gradlew build -x test

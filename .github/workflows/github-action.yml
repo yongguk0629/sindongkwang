@@ -36,6 +36,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
+          distribution: "temurin"
           java-version: "17"
 
       - name: Cache Gradle packages
@@ -49,7 +50,3 @@ jobs:
       - name: Build with Gradle
         working-directory: ./sdk
         run: ./gradlew build
-
-      - name: Run tests
-        working-directory: ./sdk
-        run: ./gradlew test

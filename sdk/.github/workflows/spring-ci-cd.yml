@@ -21,6 +21,11 @@ jobs:
         with:
           java-version: "17"
 
+      - name: Set up GitHub CLI
+        uses: cli/gh-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:

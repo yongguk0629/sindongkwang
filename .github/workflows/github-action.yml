@@ -9,36 +9,47 @@ jobs:
   run-client-action:
     name: Run Client Action
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up GitHub CLI
-        uses: cli/gh-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: "20"
 
-      - name: Run client action
-        run: |
-          if [ -f .github/workflows/react-ci-cd.yml ]; then
-            gh workflow run react-ci-cd.yml
-          fi
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Build project
+        working-directory: ./client
+        run: npm run build
 
   run-sdk-action:
     name: Run SDK Action
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: sdk
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run SDK action
-        run: |
-          if [ -f .github/workflows/spring-ci-cd.yml ]; then
-            gh workflow run spring-ci-cd.yml
-          fi
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: "17"
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        working-directory: ./sdk
+        run: ./gradlew build
+
+      - name: Run tests
+        working-directory: ./sdk
+        run: ./gradlew test

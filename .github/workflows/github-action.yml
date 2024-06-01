@@ -1,0 +1,39 @@
+name: Run Github Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-client-action:
+    name: Run Client Action
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run client action
+        run: |
+          if [ -f .github/workflows/react-ci-cd.yml ]; then
+            gh workflow run react-ci-cd.yml
+          fi
+
+  run-sdk-action:
+    name: Run SDK Action
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdk
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run SDK action
+        run: |
+          if [ -f .github/workflows/spring-ci-cd.yml ]; then
+            gh workflow run spring-ci-cd.yml
+          fi

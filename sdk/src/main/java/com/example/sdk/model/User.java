@@ -14,6 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //기본 키 생성을 데이터베이스에 맡깁니다. 
                                                         // 일반적으로 MySQL의 AUTO_INCREMENT 열이나 PostgreSQL의 SERIAL 열과 같이, 
                                                         // 데이터베이스가 자동으로 증가하는 값을 할당합니다.
+    Long id;
     String name;
     String email;
     String password;

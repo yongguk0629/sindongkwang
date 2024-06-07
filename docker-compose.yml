@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword
+      MYSQL_DATABASE: sindongkwang
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-app:
+    build: ./sdk
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/sindongkwang
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - mynetwork
+
+  frontend-app:
+    build: ./client
+    ports:
+      - "5173:5173"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
